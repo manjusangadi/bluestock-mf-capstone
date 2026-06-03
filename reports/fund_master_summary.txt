@@ -1,0 +1,30 @@
+
+============================================================
+
+ Explore fund master 
+
+============================================================
+<ArrowStringArray>
+[         'SBI Mutual Fund',         'HDFC Mutual Fund',
+      'ICICI Prudential MF',          'Nippon India MF',
+        'Kotak Mahindra MF',         'Axis Mutual Fund',
+ 'Aditya Birla Sun Life MF',          'UTI Mutual Fund',
+           'Mirae Asset MF',          'DSP Mutual Fund']
+Length: 10, dtype: str
+
+Categories
+<ArrowStringArray>
+['Equity', 'Debt']
+Length: 2, dtype: str
+
+Sub Categories
+<ArrowStringArray>
+[      'Large Cap',       'Small Cap',            'Gilt',         'Mid Cap',
+  'Short Duration',           'Value',          'Liquid',       'Index/ETF',
+       'Flexi Cap',           'Index', 'Large & Mid Cap',            'ELSS']
+Length: 12, dtype: str
+
+Risk Grades
+<ArrowStringArray>
+['Moderate', 'Very High', 'Low', 'High', 'Moderately High']
+Length: 5, dtype: str

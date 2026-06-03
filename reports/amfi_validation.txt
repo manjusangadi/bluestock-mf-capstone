@@ -1,0 +1,5 @@
+Fund Master Codes: 40
+NAV History Codes: 40
+
+Validation Successful
+All AMFI codes exist in NAV history.
