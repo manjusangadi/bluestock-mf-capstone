@@ -1,4 +1,3 @@
-# bluestock-mf-capstone 
 # Bluestock Mutual Fund Analytics Capstone Project
 
 ## Day 1 – Project Setup + Data Ingestion (ETL)
