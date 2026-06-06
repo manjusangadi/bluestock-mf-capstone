@@ -151,7 +151,7 @@ data/processed/nav_history_clean.csv
 * Saved cleaned file as:
 
 ```text
-data/processed/investor_transactions_clean.csv
+data/processed/08_investor_transactions_clean.csv
 ```
 
 ### Validation Rules
@@ -177,7 +177,7 @@ data/processed/investor_transactions_clean.csv
 * Saved cleaned file as:
 
 ```text
-data/processed/scheme_performance_clean.csv
+data/processed/07_scheme_performance_clean.csv
 ```
 
 ### Validation Rules
@@ -207,13 +207,13 @@ data/processed/scheme_performance_clean.csv
 ### Processed Outputs
 
 ```text
-fund_master_clean.csv
-aum_by_fund_house_clean.csv
-monthly_sip_inflows_clean.csv
-category_inflows_clean.csv
-industry_folio_count_clean.csv
-portfolio_holdings_clean.csv
-benchmark_indices_clean.csv
+01_fund_master_clean.csv
+03_aum_by_fund_house_clean.csv
+04_monthly_sip_inflows_clean.csv
+05_category_inflows_clean.csv
+06_industry_folio_count_clean.csv
+09_portfolio_holdings_clean.csv
+10_benchmark_indices_clean.csv
 ```
 
 ---
@@ -437,16 +437,16 @@ Markdown
 
 ```text
 data/processed/
-├── fund_master_clean.csv
-├── nav_history_clean.csv
-├── aum_by_fund_house_clean.csv
-├── monthly_sip_inflows_clean.csv
-├── category_inflows_clean.csv
-├── industry_folio_count_clean.csv
-├── scheme_performance_clean.csv
-├── investor_transactions_clean.csv
-├── portfolio_holdings_clean.csv
-└── benchmark_indices_clean.csv
+├── 01_fund_master_clean.csv
+├── 02_nav_history_clean.csv
+├── 03_aum_by_fund_house_clean.csv
+├── 04_monthly_sip_inflows_clean.csv
+├── 05_category_inflows_clean.csv
+├── 06_industry_folio_count_clean.csv
+├── 07_scheme_performance_clean.csv
+├── 08_investor_transactions_clean.csv
+├── 09_portfolio_holdings_clean.csv
+└── 10_benchmark_indices_clean.csv
 
 sql/
 ├── schema.sql
