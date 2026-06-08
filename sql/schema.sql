@@ -116,6 +116,16 @@ CREATE TABLE fact_aum (
     FOREIGN KEY (date) REFERENCES dim_date (date) ON DELETE CASCADE
 );
 
+CREATE TABLE fact_aum (
+  aum_id INTEGER PRIMARY KEY ,
+  date TEXT NOT NULL,
+  fund_house TEXT NOT NULL,
+  aum_lakh_crore REAL,
+  aum_crore REAL,
+  num_schemes INTEGER,
+  FOREIGN KEY (date) REFERENCES dim_date (date) ON DELETE CASCADE
+)
+
 -- 7. monthly_sip_inflows Table
 CREATE TABLE monthly_sip_inflows (
     month TEXT PRIMARY KEY, -- YYYY-MM
