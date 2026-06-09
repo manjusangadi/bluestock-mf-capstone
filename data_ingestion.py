@@ -187,3 +187,49 @@ with open("reports/amfi_validation.txt","w",encoding="utf-8") as f:
         f.write(
             str(missing_codes)
         )
+# -----------------------------
+# DATA QUALITY SUMMARY
+# -----------------------------
+
+dfs = {}
+summary_lines = []
+
+def log_and_print(text=""):
+    print(text)
+    summary_lines.append(text)
+
+log_and_print("\nDATA QUALITY SUMMARY")
+log_and_print("=" * 50)
+
+for filename, df in dfs.items():
+
+    log_and_print(f"\nDataset: {filename}")
+
+    # Shape
+    log_and_print(f"Rows: {df.shape[0]}")
+    log_and_print(f"Columns: {df.shape[1]}")
+
+    # Missing values
+    missing_values = df.isnull().sum().sum()
+    log_and_print(f"Missing Values: {missing_values}")
+
+    # Duplicate rows
+    duplicates = df.duplicated().sum()
+    log_and_print(f"Duplicate Rows: {duplicates}")
+
+# AMFI Validation
+log_and_print("\nAMFI CODE VALIDATION")
+log_and_print("-" * 50)
+
+master_codes = set(fund_master["amfi_code"])
+nav_codes = set(nav_history["amfi_code"])
+
+missing_codes = master_codes - nav_codes
+
+if len(missing_codes) == 0:
+    log_and_print("All AMFI codes are present in NAV history.")
+else:
+    log_and_print(f"Missing AMFI Codes: {missing_codes}")
+
+
+        

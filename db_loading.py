@@ -9,9 +9,9 @@ processed_dir = "data/processed"
 schema_path = "sql/schema.sql"
 
 # Delete existing DB file if it exists to ensure a clean rebuild
-if os.path.exists(db_path):
-    os.remove(db_path)
-    print(f"Removed existing database file: {db_path}")
+# if os.path.exists(db_path):
+#     os.remove(db_path)
+#     print(f"Removed existing database file: {db_path}")
 
 print("Connecting to SQLite database and applying schema...")
 # Create SQLite connection and run schema.sql
@@ -179,8 +179,3 @@ else:
     print("\nWARNING: Some table row counts do not match their source CSV files!")
 
 
-import sqlite3
-
-conn = sqlite3.connect("bluestock_mf.db")
-
-conn.execute("PRAGMA foreign_keys = ON")

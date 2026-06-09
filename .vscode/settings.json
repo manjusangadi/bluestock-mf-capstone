@@ -1,4 +1,11 @@
 {
-    "sqltools.connections": [],
+    "sqltools.connections": [
+        {
+            "previewLimit": 50,
+            "driver": "SQLite",
+            "name": "sqllite",
+            "database": "${workspaceFolder:bluestock_mf_capstone}/bluestock_mf.db"
+        }
+    ],
     "sqltools.useNodeRuntime": true
 }
