@@ -128,7 +128,7 @@ plt.close()
 print("Exporting Chart 6: SIP Box Plot by Age Group...")
 plt.figure(figsize=(9, 6))
 # Filter out extreme outliers for visualization clarity
-sns.boxplot(data=df_tx[df_tx["amount_inr"] < 25000], x="age_group", y="amount_inr", palette="Set3")
+sns.boxplot(data=df_tx[df_tx["amount_inr"] < 25000], x="age_group", y="amount_inr", hue="age_group", palette="Set3", legend=False)
 plt.title("SIP / Lumpsum Transaction Amount Distribution by Age Group")
 plt.xlabel("Investor Age Group")
 plt.ylabel("Transaction Amount (INR)")
@@ -153,7 +153,7 @@ state_totals["amount_crore"] = state_totals["amount_inr"] / 10000000.0
 state_totals = state_totals.sort_values(by="amount_crore", ascending=False)
 
 plt.figure(figsize=(10, 6))
-sns.barplot(data=state_totals, x="amount_crore", y="state", palette="viridis")
+sns.barplot(data=state_totals, x="amount_crore", y="state", hue="state", palette="viridis", legend=False)
 plt.title("Total Transaction Inflows by State (in Crores INR)")
 plt.xlabel("Total Amount (Crore INR)")
 plt.ylabel("State")

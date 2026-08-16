@@ -4,6 +4,8 @@ from pathlib import Path
 # Folder containing CSV files
 data_path = Path("data/raw")
 
+dfs = {}
+
 # Read all CSV files
 for file in data_path.glob("*.csv"):
 
@@ -13,6 +15,7 @@ for file in data_path.glob("*.csv"):
 
     # Load dataset
     df = pd.read_csv(file)
+    dfs[file.name] = df
 
     # Shape
     print("\nSHAPE:")
@@ -191,7 +194,6 @@ with open("reports/amfi_validation.txt","w",encoding="utf-8") as f:
 # DATA QUALITY SUMMARY
 # -----------------------------
 
-dfs = {}
 summary_lines = []
 
 def log_and_print(text=""):
@@ -230,6 +232,10 @@ if len(missing_codes) == 0:
     log_and_print("All AMFI codes are present in NAV history.")
 else:
     log_and_print(f"Missing AMFI Codes: {missing_codes}")
+
+# Write summary to file
+with open("reports/day1_notes_data_quality.txt", "w", encoding="utf-8") as f:
+    f.write("\n".join(summary_lines))
 
 
         

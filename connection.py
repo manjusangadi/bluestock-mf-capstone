@@ -1,62 +1,45 @@
 import sqlite3
+import os
 
-conn = sqlite3.connect("bluestock_mf.db")
+DB_PATH = "bluestock_mf.db"
 
-print("Database Connected")
+def get_connection(db_path=DB_PATH):
+    """
+    Establish a connection to the SQLite database and enable foreign keys.
+    """
+    conn = sqlite3.connect(db_path)
+    conn.execute("PRAGMA foreign_keys = ON;")
+    return conn
 
-
-import sqlite3
-
-conn = sqlite3.connect("bluestock_mf.db")
-
-cursor = conn.cursor()
-
-with open("sql/schema.sql", "r") as file:
-    sql_script = file.read()
-
-# cursor.executescript(sql_script)
-
-conn.commit()
-
-print("Tables Created Successfully")
-
-cursor.execute("""
-SELECT name
-FROM sqlite_master
-WHERE type='table';
-""")
-
-print(cursor.fetchall())
-
-import pandas as pd
-
-fund_df = pd.read_csv(
-    "data/raw/01_fund_master.csv"
-)
-
-fund_df.to_sql(
-    "dim_fund",
-    conn,
-    if_exists="append",
-    index=False
-)
-
-print("Data Loaded")
-
-
-import sqlite3
-
-conn = sqlite3.connect("bluestock_mf.db")
-
-cursor = conn.cursor()
-
-cursor.execute("SELECT sqlite_version();")
-
-print(cursor.fetchone())
-
-
-import sqlite3
-
-conn = sqlite3.connect("bluestock_mf.db")
-
-conn.execute("PRAGMA foreign_keys = ON")
+if __name__ == "__main__":
+    print(f"Connecting to database at: {os.path.abspath(DB_PATH)}")
+    try:
+        conn = get_connection()
+        print("Database Connected successfully.")
+        
+        cursor = conn.cursor()
+        
+        # Print SQLite version
+        cursor.execute("SELECT sqlite_version();")
+        version = cursor.fetchone()[0]
+        print(f"SQLite Version: {version}")
+        
+        # Fetch and list tables
+        cursor.execute("""
+            SELECT name 
+            FROM sqlite_master 
+            WHERE type='table' AND name NOT LIKE 'sqlite_%';
+        """)
+        tables = [row[0] for row in cursor.fetchall()]
+        print("\nExisting Tables in Database:")
+        if tables:
+            for table in tables:
+                cursor.execute(f"SELECT COUNT(*) FROM {table};")
+                count = cursor.fetchone()[0]
+                print(f"  - {table} ({count} rows)")
+        else:
+            print("  (No tables found. Please run db_loading.py to apply schema and load data.)")
+            
+        conn.close()
+    except Exception as e:
+        print(f"Database Connection failed: {e}")

@@ -135,8 +135,7 @@ CREATE TABLE category_inflows (
     category_inflow_id INTEGER PRIMARY KEY ,
     month TEXT NOT NULL,
     category TEXT NOT NULL,
-    net_inflow_crore REAL,
-    inet_inflow_crore TEXT
+    net_inflow_crore REAL
 );
 
 -- 9. industry_folio_count Table
