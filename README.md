@@ -721,3 +721,88 @@ Highlights concentration risk and sector preferences.
 # Overall Conclusion
 
 The mutual fund industry demonstrated strong growth between 2022 and 2025, supported by increasing SIP participation, rising folio counts, expanding AUM, and strong retail investor engagement. Equity-oriented categories remained the preferred investment choice, while geographic and demographic analysis revealed substantial opportunities for further market penetration.
+
+---
+
+## Day 4 – Fund Performance Analytics
+
+### Objective
+
+The objective of Day 4 was to design and implement a quantitative performance assessment engine to evaluate risk-adjusted returns, benchmark sensitivities, and portfolio downside risks for all 40 mutual fund schemes in our database.
+
+---
+
+# Tasks & Metrics Implemented
+
+### 1. Daily Returns Computation
+* **Calculation**: Daily returns were calculated using:
+  $$\text{Daily Return}_t = \frac{\text{NAV}_t}{\text{NAV}_{t-1}} - 1$$
+* **Validation**: Daily returns across all 40 schemes were validated to have a reasonable standard normal distribution (mean daily return: $0.06\%$, std dev: $0.94\%$, extremes within normal market limits).
+
+### 2. Annualized CAGR
+* **Calculation**: Computed 1-year, 3-year, and maximum available period (~4.4 years) CAGR to compare fund growth trajectories:
+  $$\text{CAGR} = \left( \frac{\text{NAV}_{\text{end}}}{\text{NAV}_{\text{start}}} \right)^{\frac{1}{n}} - 1$$
+
+### 3. Annualized Sharpe Ratio
+* **Calculation**: Measures risk-adjusted excess returns using the RBI repo rate proxy of $6.5\%$ as the risk-free rate:
+  $$\text{Sharpe} = \frac{E(R_p) - R_{f, \text{daily}}}{Std(R_p)} \times \sqrt{252}$$
+
+### 4. Annualized Sortino Ratio
+* **Calculation**: Measures downside risk-adjusted returns by only penalizing negative return volatility:
+  $$\text{Sortino} = \frac{E(R_p) - R_{f, \text{daily}}}{\sqrt{E(\min(R_p, 0)^2)}} \times \sqrt{252}$$
+
+### 5. Alpha & Beta (OLS Regression)
+* **Calculation**: Ran OLS linear regression of fund daily returns against Nifty 100 daily returns to identify market sensitivity ($\beta$) and manager outperformance ($\alpha$):
+  $$\text{Daily Return}_{\text{fund}} = \alpha_{\text{daily}} + \beta \times \text{Daily Return}_{\text{Nifty100}} + \epsilon$$
+  Beta is the slope, and Annualized Alpha is calculated as $\alpha_{\text{daily}} \times 252$.
+
+### 6. Maximum Drawdown (Max DD)
+* **Calculation**: Computed the worst peak-to-trough drop in NAV and identified the exact date ranges:
+  $$\text{Drawdown}_t = \frac{\text{NAV}_t}{\text{Running Max NAV}_t} - 1.0$$
+
+### 7. Fund Scorecard (0–100)
+* **Calculation**: Built a composite scorecard using weighted percentile ranks:
+  $$\text{Composite Score} = 0.30 \times R_{3yr} + 0.25 \times R_{\text{Sharpe}} + 0.20 \times R_{\text{Alpha}} + 0.15 \times R_{\text{Expense}} + 0.10 \times R_{\text{MaxDD}}$$
+  * **Mirae Asset Large Cap Fund** emerged as the top performer with a score of **87.25**.
+  * **HDFC Mid-Cap Opportunities Fund** exhibited the highest manager alpha at **27.11%**.
+
+### 8. Benchmark Comparison & Tracking Error
+* **Calculation**: Plotted cumulative returns of the Top 5 funds normalized to base 100 on 2023-05-29 against `NIFTY50` and `NIFTY100`. Annualized tracking error was calculated as:
+  $$\text{Tracking Error} = Std(R_{\text{fund}} - R_{\text{benchmark}}) \times \sqrt{252}$$
+
+---
+
+# Day 4 Deliverables
+
+```text
+notebooks/
+└── Performance_Analytics.ipynb
+
+reports/
+├── Day4_Performance_Analytics_Report.pdf
+├── alpha_beta.csv
+├── fund_scorecard.csv
+├── tracking_errors.csv
+└── charts/
+    └── benchmark_comparison.png
+
+run_performance_analytics.py
+generate_analytics_report.py
+```
+
+---
+
+# Git Commit
+
+```bash
+git add .
+git commit -m "Day 4: Completed Fund Performance Analytics and scorecard PDF report"
+git push origin main
+```
+
+---
+
+# Outcome
+
+Successfully computed financial performance metrics (CAGR, Sharpe, Sortino, Alpha, Beta, Max DD) for all 40 mutual fund schemes, established a composite scorecard model, plotted index benchmark comparison, and compiled a professional multi-page training PDF report summarizing the analytics pipeline.
+
