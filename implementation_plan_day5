@@ -1,0 +1,79 @@
+# Implementation Plan - Day 5 Dashboard Development
+
+This plan outlines the design specifications, relationships, DAX measures, and assets we will build to deliver the **Day 5 — Dashboard Development** requirements for the Bluestock Mutual Fund Analytics Capstone Project.
+
+## Proposed Changes
+
+### 1. Data Model Relationships (Star Schema)
+We will define the relationships in Power BI as a clean star schema to ensure optimal cross-filtering:
+* **Dimension Tables**:
+  - `dim_fund[amfi_code]` (1) ─── (many) `fact_nav[amfi_code]`
+  - `dim_fund[amfi_code]` (1) ─── (many) `fact_performance[amfi_code]`
+  - `dim_fund[amfi_code]` (1) ─── (many) `fact_transactions[amfi_code]`
+  - `dim_fund[amfi_code]` (1) ─── (many) `portfolio_holdings[amfi_code]`
+* **Calendar Dimension**:
+  - `dim_date[date]` (1) ─── (many) `fact_nav[date]`
+  - `dim_date[date]` (1) ─── (many) `fact_transactions[date]`
+  - `dim_date[date]` (1) ─── (many) `benchmark_indices[date]`
+  - `dim_date[date]` (1) ─── (many) `portfolio_holdings[portfolio_date]`
+  - `dim_date[date]` (1) ─── (many) `fact_aum[date]`
+
+---
+
+### 2. DAX Measures for Each Page
+We will write out the exact DAX measures required for the dashboard pages:
+* **Page 1: Industry Overview**:
+  - `Total AUM (Lakh Cr) = SUM(fact_aum[aum_lakh_crore])` (Filtered to latest date)
+  - `Monthly SIP Inflow (Cr) = SUM(monthly_sip_inflows[sip_inflow_crore])` (Filtered to latest month)
+  - `Total Active Folios (Cr) = MAX(industry_folio_count[total_folios_crore])`
+* **Page 2: Fund Performance**:
+  - `Annualized Return = [Calculated 3Yr CAGR]`
+  - `Annualized Sharpe = [Computed Sharpe Measure]`
+  - `Annualized Volatility = STDEV.S(fact_nav[daily_return]) * SQRT(252)`
+* **Page 3: Investor Analytics**:
+  - `Average Ticket Size = AVERAGE(fact_transactions[amount_inr])`
+  - `Total Transactions Count = COUNT(fact_transactions[transaction_id])`
+* **Page 4: SIP & Market Trends**:
+  - `Tracking Error = STDEV.X(SUMMARIZE(dim_date, dim_date[date], "Diff", [Fund Return] - [Benchmark Return]), [Diff]) * SQRT(252)`
+
+---
+
+### 3. Screen Mockups & Visualizations
+Since we cannot run the GUI of Power BI Desktop directly, we will use our `generate_image` tool to create four high-fidelity, professional-grade mockups representing the final design of each page, matching the Bluestock brand colors (deep indigo and blue):
+* **Page 1 (Industry Overview)**: KPI cards for AUM, SIP, Folios, Schemes, and trend charts.
+* **Page 2 (Fund Performance)**: Scatter plot of risk/return, bubble chart, and scorecard table.
+* **Page 3 (Investor Analytics)**: Transaction demographics, transaction types, geographic split.
+* **Page 4 (SIP & Market Trends)**: Dual-axis SIP vs Nifty 50 chart, category heatmap.
+
+---
+
+### 4. PDF Compilation & Template Delivery
+We will write a python script [`generate_dashboard_pdf.py`](file:///d:/desktop2/bluestock_mf_capstone/generate_dashboard_pdf.py) to:
+* Embed the four generated page screenshots.
+* Detail the full database schema mapping, relationship logic, and DAX measures.
+* Compile the final professional PDF document `Dashboard.pdf` in the workspace root and `reports/` directory.
+* Provide a Power BI Setup Guide file explaining how to import the processed CSVs and configure the visual fields quickly.
+
+---
+
+## Open Questions
+
+> [!NOTE]
+> Please review and confirm your preferences:
+> 1. **Power BI Template (.pbix)**: Since `.pbix` is a closed, binary file format that requires Power BI Desktop to build, we will provide a comprehensive Power BI Setup Guide containing all relations, DAX code, and visual details, along with the PDF report and 4-page PNG screenshots. Is this approach acceptable to you?
+> 2. **Bluestock Color Theme**: We will use a premium color palette (Primary: `#1A365D` Dark Navy, Secondary: `#3182CE` Slate Blue, Accent: `#E2E8F0` Light Grey) to represent the Bluestock brand theme. Does this match your design expectations?
+
+## Verification Plan
+
+### Automated Verification
+1. Verify database tables are ready for import:
+   ```bash
+   python connection.py
+   ```
+2. Generate the mockups:
+   * Run the image generation pipeline to save the 4 PNG screenshots.
+3. Compile the final PDF:
+   ```bash
+   python generate_dashboard_pdf.py
+   ```
+4. Verify `reports/Dashboard.pdf` and `Dashboard.pdf` exist.

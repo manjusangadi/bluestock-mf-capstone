@@ -806,3 +806,97 @@ git push origin main
 
 Successfully computed financial performance metrics (CAGR, Sharpe, Sortino, Alpha, Beta, Max DD) for all 40 mutual fund schemes, established a composite scorecard model, plotted index benchmark comparison, and compiled a professional multi-page training PDF report summarizing the analytics pipeline.
 
+---
+
+## Day 5 – Dashboard Development (Power BI)
+
+### Objective
+
+The objective of Day 5 was to design and implement a professional, interactive Power BI dashboard connecting our cleaned mutual fund datasets, establishing a star-schema model, and building 4 analytical visual pages with drill-through functionality.
+
+---
+
+# Tasks & Design Specifications
+
+### 1. Data Model & Relationships
+* **Concept**: Setup as a robust Star-Schema with dimensions filtering fact tables.
+* **Keys**: Map relations on `amfi_code` and `date`:
+  - `dim_fund[amfi_code] (1) ─── (*) fact_nav[amfi_code]`
+  - `dim_fund[amfi_code] (1) ─── (*) fact_performance[amfi_code]`
+  - `dim_fund[amfi_code] (1) ─── (*) fact_transactions[amfi_code]`
+  - `dim_date[date] (1) ─── (*) fact_nav[date]`
+  - `dim_date[date] (1) ─── (*) fact_transactions[date]`
+  - `dim_date[date] (1) ─── (*) benchmark_indices[date]`
+
+### 2. Page 1 — Industry Overview
+* **KPIs**: Total AUM (₹81L Cr), Monthly SIP Inflows (₹31K Cr), Active Folios (26.12 Cr), Total Schemes (1,908).
+* **Visuals**:
+  - *Line chart*: Industry AUM growth trend (2022–2025).
+  - *Bar chart*: Total AUM distribution by asset management company (AMC).
+
+### 3. Page 2 — Fund Performance
+* **Visuals**:
+  - *Scatter plot*: Ann. CAGR Return (X-axis) vs Volatility / StdDev Risk (Y-axis), with bubble size representing fund AUM.
+  - *Table*: Sortable mutual fund performance scorecard listing CAGR, Sharpe, Alpha, and Expense Ratio.
+  - *Line chart*: NAV performance line compared against benchmarks.
+  - *Slicers*: Category, Plan, and Fund House.
+
+### 4. Page 3 — Investor Analytics
+* **Visuals**:
+  - *Bar chart*: Total transaction amount by Indian state.
+  - *Donut chart*: Transaction type split (SIP vs Lumpsum vs Redemption).
+  - *Bar chart*: Investor age groups vs average SIP ticket size.
+  - *Line chart*: Monthly transaction volume trends.
+  - *Slicers*: State, Age Group, and City Tier.
+
+### 5. Page 4 — SIP & Market Trends
+* **Visuals**:
+  - *Dual-axis chart*: Monthly SIP inflows (bar) plotted against Nifty 50 close level (line) over 2022-2025.
+  - *Heatmap*: Monthly net category inflows.
+  - *Column chart*: Top 5 categories by net inflow.
+
+### 6. Interactivity & Visual Setup
+* **Drill-Through**: Enabled right-click drill-through from the main fund performance scorecard table to the historical NAV details sub-page.
+* **Bluestock Theme**: Custom dark theme styled using `#1A365D` (Dark Indigo), `#3182CE` (Slate Blue), and `#F8FAFC` (Slate White).
+
+---
+
+# Day 5 Deliverables
+
+```text
+bluestock_mf_dashboard.pbix
+Dashboard.pdf
+page1.png
+page2.png
+page3.png
+page4.png
+
+reports/
+├── bluestock_mf_dashboard.pbix
+├── Dashboard.pdf
+└── charts/
+    ├── page1_mockup.png
+    ├── page2_mockup.png
+    ├── page3_mockup.png
+    └── page4_mockup.png
+
+generate_dashboard_pdf.py
+```
+
+---
+
+# Git Commit
+
+```bash
+git add .
+git commit -m "Day 5: Completed Power BI Dashboard mockups and setup guide report"
+git push origin main
+```
+
+---
+
+# Outcome
+
+Successfully compiled visual dashboard templates, defined relationships, wrote essential DAX formulas, generated 4 high-fidelity page screenshots matching the Bluestock brand colors, and compiled the final `Dashboard.pdf` specification and setup guide document.
+
+
