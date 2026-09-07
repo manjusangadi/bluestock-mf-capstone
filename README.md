@@ -899,4 +899,129 @@ git push origin main
 
 Successfully compiled visual dashboard templates, defined relationships, wrote essential DAX formulas, generated 4 high-fidelity page screenshots matching the Bluestock brand colors, and compiled the final `Dashboard.pdf` specification and setup guide document.
 
+---
+
+## Day 6 – Advanced Analytics + Risk Metrics
+
+### Objective
+
+The objective of Day 6 was to implement quantitative tail-risk models (Historical VaR and Conditional VaR), evaluate dynamic rolling risk-adjusted performance (90-day Rolling Sharpe Ratio), conduct investor cohort behavior and SIP continuity/churn analysis, build a risk-profiled fund recommender engine, and quantify sector concentration risk across equity funds using the Herfindahl-Hirschman Index (HHI).
+
+---
+
+# Tasks & Mathematical Formulations
+
+### 1. Historical Value at Risk (VaR 95%) & Conditional VaR (CVaR)
+* **Formulations**:
+  - Daily NAV returns: $R_t = \frac{\text{NAV}_t}{\text{NAV}_{t-1}} - 1$
+  - $\text{VaR}_{95\%} = \text{Percentile}(R, 5\%)$ (Daily threshold loss exceeded on only 5% of trading sessions).
+  - $\text{CVaR}_{95\%} = \mathbb{E}[R \mid R \le \text{VaR}_{95\%}]$ (Expected Shortfall: average loss incurred during tail breach days).
+  - Annualized Metrics: $\text{VaR}_{\text{ann}} = \text{VaR}_{\text{daily}} \times \sqrt{252}, \quad \text{CVaR}_{\text{ann}} = \text{CVaR}_{\text{daily}} \times \sqrt{252}$
+* **Findings**:
+  - Highest Tail Risk: Small Cap schemes (`SBI Small Cap Fund`: VaR $-2.69\%$, CVaR $-3.24\%$; `Axis Small Cap Fund`: VaR $-2.62\%$, CVaR $-3.17\%$).
+  - Lowest Tail Risk: Liquid and debt funds (`ICICI Pru Liquid Fund`: VaR $-0.03\%$, CVaR $-0.05\%$).
+* **Output**: Generated for all 40 schemes and saved to `var_cvar_report.csv` and `reports/var_cvar_report.csv`.
+
+---
+
+### 2. Rolling 90-Day Sharpe Ratio Analysis
+* **Formulation**:
+  $$\text{Rolling Sharpe}_{90d}(t) = \frac{\mu_{90}(t)}{\sigma_{90}(t)} \times \sqrt{252}$$
+* **5 Evaluated Funds**:
+  1. `148567` — Mirae Asset Large Cap Fund
+  2. `100033` — HDFC Mid-Cap Opportunities Fund
+  3. `120843` — Kotak Flexicap Fund
+  4. `120504` — ICICI Prudential Bluechip Fund
+  5. `120505` — ICICI Prudential Midcap Fund
+* **Findings**: Mid-cap schemes demonstrated high regime volatility (rolling Sharpe oscillating from $-0.80$ to $+3.20$), whereas large-cap funds maintained stable, narrower bands ($-0.30$ to $+1.80$).
+* **Output**: Plotted multi-line comparison chart saved to `rolling_sharpe_chart.png` and `reports/charts/rolling_sharpe_chart.png`.
+
+---
+
+### 3. Investor Cohort Analysis
+* **Methodology**: Segmented 5,000 investors by initial transaction date into entry cohorts (`2024` vs `2025`).
+* **Cohort Metrics Summary**:
+  - **Cohort 2024**: 4,803 investors, ₹349.11 Cr total capital committed, average transaction ₹1,07,422. Total SIP capital ₹21.50 Cr with average SIP ticket of ₹10,997. Top scheme preference: *Mirae Asset Emerging Bluechip Fund* (874 transactions).
+  - **Cohort 2025**: 197 investors, ₹3.05 Cr total capital committed, average transaction ₹1,09,158. Total SIP capital ₹22.55 Lakh with higher average SIP ticket of ₹13,505 (+22.8%). Top scheme preference: *SBI Small Cap Fund* (12 transactions).
+* **Output**: Saved to `cohort_analysis.csv` and `reports/cohort_analysis.csv`.
+
+---
+
+### 4. SIP Continuity & Churn Analysis
+* **Methodology**: Filtered all investors with 6 or more SIP transactions (1,362 investors). Computed consecutive date differences ($\Delta t$) and calculated the mean gap in days. Flagged investors with average cadence $> 35$ days as `"at-risk"`.
+* **Findings**:
+  - Total Eligible Investors (6+ SIPs): 1,362
+  - At-Risk Investors (Avg Gap $> 35$ Days): **1,332 (97.80%)**
+  - Healthy Cadence Investors (Avg Gap $\le 35$ Days): **30 (2.20%)**
+  - Cohort Mean Gap: **64.89 days**
+* **Implication**: Over 97% of regular SIP contributors show intermittent breaks or skipped auto-debits, emphasizing the urgent need for pre-debit notifications and automated mandate retention workflows.
+* **Output**: Saved to `sip_continuity.csv` and `reports/sip_continuity.csv`.
+
+---
+
+### 5. Simple Fund Recommender Engine
+* **Script**: `recommender.py`
+* **Features**:
+  - Command-line argument parsing (`--risk Low|Moderate|High`, `--top N`) with interactive fallback prompt.
+  - Mapped risk appetite to underlying risk grades:
+    - **Low**: Liquid & Debt schemes (`risk_grade == 'Low'`) $\rightarrow$ Top pick: *ICICI Pru Liquid Fund* (Sharpe 7.68, 3Y CAGR 7.68%).
+    - **Moderate**: Large Cap & Balanced schemes (`risk_grade IN ('Moderate', 'Moderately High')`) $\rightarrow$ Top pick: *HDFC Top 100 Fund* (Sharpe 1.06, 3Y CAGR 14.84%).
+    - **High**: Mid Cap, Small Cap, Aggressive growth (`risk_grade IN ('High', 'Very High')`) $\rightarrow$ Top pick: *Kotak Emerging Equity Fund* (Sharpe 0.96, 3Y CAGR 18.23%).
+* **Output**: Prints formatted terminal tables and exports ranked pandas DataFrames.
+
+---
+
+### 6. Sector Concentration (Herfindahl-Hirschman Index - HHI)
+* **Formulation**:
+  $$\text{HHI} = \sum_{s=1}^{N} (w_s)^2$$
+  Where $w_s$ is the percentage allocation ($0 \le w_s \le 100$) to sector $s$.
+* **Classification Standards**:
+  - $\text{HHI} < 1,500$: **Diversified** (e.g., `UTI Mid Cap Fund`: HHI 1,240.20, `Kotak Flexicap Fund`: HHI 1,362.06).
+  - $1,500 \le \text{HHI} \le 2,500$: **Moderately Concentrated** (e.g., `DSP Midcap Fund`: HHI 2,410.77).
+  - $\text{HHI} > 2,500$: **Highly Concentrated** (e.g., `Axis Bluechip Fund`: HHI 2,967.69 with 48.69% in IT; `HDFC Mid-Cap Opportunities`: HHI 2,531.55 with 41.20% in Banking).
+* **Output**: Evaluated for all 34 equity funds and saved to `sector_hhi.csv` and `reports/sector_hhi.csv`.
+
+---
+
+# Day 6 Deliverables
+
+```text
+notebooks/
+└── Advanced_Analytics.ipynb
+
+reports/
+├── var_cvar_report.csv
+├── cohort_analysis.csv
+├── sip_continuity.csv
+├── sector_hhi.csv
+└── charts/
+    └── rolling_sharpe_chart.png
+
+Advanced_Analytics.ipynb
+var_cvar_report.csv
+cohort_analysis.csv
+sip_continuity.csv
+sector_hhi.csv
+rolling_sharpe_chart.png
+recommender.py
+run_advanced_analytics.py
+build_notebook.py
+```
+
+---
+
+# Git Commit
+
+```bash
+git add .
+git commit -m "Day 6: Complete advanced analytics, VaR/CVaR, rolling Sharpe, and recommender"
+git push origin main
+```
+
+---
+
+# Outcome
+
+Successfully computed tail-risk metrics (VaR & CVaR) for all 40 schemes, charted rolling 90-day Sharpe persistence for key funds, performed investor cohort and SIP churn analysis, constructed an interactive fund recommender CLI script, quantified sector concentration risk (HHI) across 34 equity schemes, authored the comprehensive `Advanced_Analytics.ipynb` notebook, and documented the complete quantitative findings.
+
 
