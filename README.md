@@ -1024,4 +1024,151 @@ git push origin main
 
 Successfully computed tail-risk metrics (VaR & CVaR) for all 40 schemes, charted rolling 90-day Sharpe persistence for key funds, performed investor cohort and SIP churn analysis, constructed an interactive fund recommender CLI script, quantified sector concentration risk (HHI) across 34 equity schemes, authored the comprehensive `Advanced_Analytics.ipynb` notebook, and documented the complete quantitative findings.
 
+---
+
+## Day 7 – Final Report + Presentation + Deployment
+
+### Objective
+
+The objective of Day 7 was to synthesize all data engineering, exploratory data analysis, quantitative risk modeling, and business intelligence deliverables into an executive-ready submission package:
+1. Compile an 18-page publication-grade PDF report (`Final_Report.pdf`) covering executive findings, database architecture, methodology, risk analytics, and strategic recommendations.
+2. Create a 12-slide 16:9 widescreen presentation deck (`Bluestock_MF_Presentation.pptx`) matching the Bluestock brand palette.
+3. Clean all Python codebase modules and build the single master execution script (`run_pipeline.py`).
+4. Update `README.md` with complete end-to-end execution guides, dataset schemas, and evaluation self-review checklist.
+5. Create local Git release commit and tag (`v1.0`).
+
+---
+
+# Tasks & Deliverable Specifications
+
+### 1. Final PDF Technical Report (`Final_Report.pdf`, 18 Pages)
+* **Script**: `generate_final_report.py` (ReportLab 5.0 with two-pass `NumberedCanvas`).
+* **Page Count**: Exactly 18 pages.
+* **Table of Contents & Core Sections**:
+  1. *Cover Page*: Title, Subtitle, Bluestock metadata, candidate credentials, date.
+  2. *Executive Summary & Business Context*: Industry macro background (₹81L+ Cr AUM, 26Cr+ folios, ₹31K Cr monthly SIP) and core retail investor dilemmas.
+  3. *Data Sources & Ingestion Ecosystem*: Catalog of all 10 datasets, 87K+ records, schema validation rules.
+  4. *ETL Pipeline Design & SQLite Star Schema*: Data flow from raw to star schema (`dim_fund`, `dim_date`, fact tables, compound B-Tree indexing).
+  5. *EDA — Industry Growth & Macro Trends*: Historical AUM CAGR (+26.3% over 2022–2025) and institutional concentration.
+  6. *EDA — SIP Inflows & Category Allocations*: Monthly SIP velocity and category net flow heatmaps.
+  7. *EDA — Demographics & Behavioral Geography*: State-wise volumes (Maharashtra, Gujarat, Karnataka lead) and age-tier SIP ticket distributions.
+  8. *Fund Performance Analytics — Methodology & Formulas*: CAGR, annualized volatility, Sharpe, Sortino, Alpha & Beta (OLS regression vs Nifty 100), Max Drawdown.
+  9. *Fund Performance Scorecard & Top Performers*: Composite 0–100 ranking model; top performers led by Mirae Asset Large Cap Fund (87.25).
+  10. *Benchmark Relative Performance & Tracking Error*: Base-100 normalized cumulative charts and tracking error analysis.
+  11. *Advanced Risk Analytics — Value at Risk (VaR 95%) & CVaR*: Tail-risk metrics for all 40 schemes; Small-cap tail downside (-3.24% daily CVaR) vs Liquid funds (-0.05%).
+  12. *Advanced Risk Analytics — Rolling 90-Day Sharpe Dynamics*: 2022–2026 rolling Sharpe comparison; mid-cap regime sensitivity (-0.80 to +3.20) vs large-cap stability (-0.30 to +1.80).
+  13. *Investor Cohort & SIP Continuity Analysis*: 2024 vs 2025 cohort dynamics; identification of 97.8% mandate cadence gaps (>35 days) across 1,362 regular SIP investors.
+  14. *Sector Concentration (HHI Index) & Fund Recommender*: Evaluation of 34 equity funds; Axis Bluechip (48.7% IT) concentration risk; `recommender.py` architecture.
+  15. *Power BI Dashboard Showcase (Pages 1 & 2)*: Industry Overview & Fund Performance visual breakdowns, DAX formulas, and mockups.
+  16. *Power BI Dashboard Showcase (Pages 3 & 4)*: Investor Analytics & SIP/Market Trends visual breakdowns, cross-filtering, and mockups.
+  17. *Project Limitations & Analytical Assumptions*: Modeling constraints, stationary distributions, synthetic demographic parameters.
+  18. *Strategic Recommendations & Executive Next Steps*: 5 transformative business strategies for Bluestock Fintech.
+
+---
+
+### 2. 12-Slide Executive Presentation Deck (`Bluestock_MF_Presentation.pptx`)
+* **Script**: `generate_presentation.py` (`python-pptx` 1.0.2).
+* **Format**: 16:9 Widescreen layout, Bluestock corporate palette (`#1A365D` Dark Navy, `#3182CE` Slate Blue, `#F8FAFC` Light Slate, `#38A169` Emerald).
+* **Slide Sequence (Exactly 12 Slides)**:
+  - **Slide 1**: Title Slide (Hero navy background, project title, candidate details, date).
+  - **Slide 2**: Problem Statement & Strategic Objectives (Retail investment dilemmas and 4 solution pillars).
+  - **Slide 3**: Data Sources & Ingestion Ecosystem (Summary cards and dataset mapping).
+  - **Slide 4**: System Architecture & Relational Star Schema (End-to-end data pipeline stages and database model).
+  - **Slide 5**: EDA Highlights (1) — Industry AUM & SIP Inflow Momentum (Embedded charts and macro takeaways).
+  - **Slide 6**: EDA Highlights (2) — Demographics & Investor Behavior (Embedded state flows and age boxplots).
+  - **Slide 7**: Performance Analytics (1) — Benchmark Comparison & Scorecard (Scorecard weights and top fund highlights).
+  - **Slide 8**: Performance Analytics (2) — Tail Risk, Rolling Sharpe & Sector HHI (Advanced quantitative risk findings).
+  - **Slide 9**: Power BI Dashboard Showcase (1) — Industry Overview & Fund Performance Pages.
+  - **Slide 10**: Power BI Dashboard Showcase (2) — Investor Analytics & Market Trends Pages.
+  - **Slide 11**: Strategic Recommendations for Bluestock Fintech (5 actionable corporate strategies).
+  - **Slide 12**: Conclusion & Thank You / Q&A.
+
+---
+
+### 3. Master Pipeline Execution Script (`run_pipeline.py`)
+* **Features**:
+  - One-click end-to-end automation executing all pipeline stages: Ingestion $\rightarrow$ Cleaning $\rightarrow$ DB Loading $\rightarrow$ EDA $\rightarrow$ Performance $\rightarrow$ Advanced Analytics $\rightarrow$ Presentation $\rightarrow$ Final Report.
+  - Timing benchmarks, status verification, error trapping, and progress reporting.
+  - Supports `--quick` flag for running analytics and document compilation in ~11 seconds.
+
+---
+
+# How to Run the End-to-End Platform
+
+### 1. Environment Setup
+Ensure Python 3.10+ is installed with required packages:
+```bash
+pip install -r requirements.txt
+pip install python-pptx reportlab
+```
+
+### 2. Full Pipeline Execution
+To execute all stages end-to-end from scratch:
+```bash
+python run_pipeline.py
+```
+
+### 3. Quick Analytics & Reporting Execution
+To recompute quantitative risk models and recompile the PDF report & presentation deck:
+```bash
+python run_pipeline.py --quick
+```
+
+### 4. Interactive Fund Recommender
+To run the risk-appetite fund recommendation engine:
+```bash
+python recommender.py --risk Low
+python recommender.py --risk Moderate
+python recommender.py --risk High
+```
+
+---
+
+# Capstone Self-Review & Evaluation Rubric Checklist
+
+| # | Deliverable / Rubric Requirement | Weight | Status | Verification & Artifact Location |
+| :-: | :--- | :-: | :-: | :--- |
+| **D1** | **ETL Pipeline Script** | 15% | **Complete** | Automated ingestion, validation, and cleaning in `data_cleaning.py` & `run_pipeline.py` |
+| **D2** | **SQLite Database** | 10% | **Complete** | Relational Star Schema warehouse in `bluestock_mf.db` with primary/foreign keys |
+| **D3** | **EDA Notebook & Charts** | 15% | **Complete** | 12 publication charts in `reports/charts/` & `notebooks/EDA_Analysis.ipynb` |
+| **D4** | **Performance Metrics** | 15% | **Complete** | `run_performance_analytics.py`, `fund_scorecard.csv`, `alpha_beta.csv`, `tracking_errors.csv` |
+| **D5** | **Interactive Dashboard** | 20% | **Complete** | 4-page Power BI specification in `Dashboard.pdf` + high-res mockups (`page1.png` to `page4.png`) |
+| **D6** | **Advanced Analytics** | 10% | **Complete** | `Advanced_Analytics.ipynb`, `var_cvar_report.csv`, `rolling_sharpe_chart.png`, `recommender.py` |
+| **D7** | **Final Report + Slides** | 15% | **Complete** | `Final_Report.pdf` (18 pages) & `Bluestock_MF_Presentation.pptx` (12 slides) |
+| **B1** | **Live NAV API Integration** | Bonus | **Complete** | Real-time AMFI data fetcher in `live_nav_fetch.py` querying mfapi.in |
+| **B2** | **Master Runner Automation** | Bonus | **Complete** | Single-command automated orchestrator in `run_pipeline.py` |
+
+---
+
+# Day 7 Deliverables Summary
+
+```text
+Final_Report.pdf                        (18-Page Comprehensive Technical & Executive Report)
+Bluestock_MF_Presentation.pptx          (12-Slide 16:9 Widescreen Executive Presentation)
+run_pipeline.py                         (Master Automated Pipeline Orchestration Script)
+generate_final_report.py                (ReportLab 5.0 PDF Generation Engine)
+generate_presentation.py                (python-pptx Presentation Engine)
+
+reports/
+├── Final_Report.pdf
+└── Bluestock_MF_Presentation.pptx
+```
+
+---
+
+# Git Release Tag (Local)
+
+```bash
+git add .
+git commit -m "Final: Complete Bluestock MF Capstone"
+git tag v1.0
+```
+*(Note: Per user instructions, code is maintained strictly in the local repository without remote push).*
+
+---
+
+# Final Project Outcome
+
+The **Bluestock Mutual Fund Analytics Capstone Project** is 100% completed. All 8 capstone pillars, 7 daily milestones, 10 cleaned datasets, relational SQLite database, quantitative tail-risk models, interactive Power BI layouts, 12-slide executive presentation, and 18-page publication PDF report are fully implemented, verified, and operational.
+
 
