@@ -1,28 +1,15 @@
-import requests
-import pandas as pd
+"""
+Legacy Wrapper: live_nav_fetch.py
+Forwarding execution to modular src.etl.live_nav.
+"""
+import sys
+from pathlib import Path
 
-codes = {
-    "HDFC_Top100": 125497,
-    "SBI_Bluechip": 119551,
-    "ICICI_Bluechip": 120503,
-    "Nippon_LargeCap": 118632,
-    "Axis_Bluechip": 119092,
-    "Kotak_Bluechip": 120841
-}
+PROJECT_ROOT = Path(__file__).resolve().parent
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
 
-for fund, code in codes.items():
+from src.etl.live_nav import fetch_live_nav
 
-    url = f"https://api.mfapi.in/mf/{code}"
-
-    response = requests.get(url)
-
-    data = response.json()
-
-    nav_df = pd.DataFrame(data["data"])
-
-    nav_df.to_csv(
-        f"data/raw/live_nav_{code}.csv",
-        index=False
-    )
-
-    print(f"live_nav_{code} NAV data saved successfully")
+if __name__ == "__main__":
+    fetch_live_nav()

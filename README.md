@@ -38,23 +38,68 @@ This project is part of the Bluestock Data Analyst Internship Program. The objec
 
 ---
 
-## Project Structure
+## Project Structure & Modular Architecture
 
+```text
 bluestock_mf_capstone/
-
-├── data/
-│ ├── raw/
-│ └── processed/
+├── run_pipeline.py                    # Master End-to-End Orchestrator (All 8 Stages)
+├── recommender.py                     # Simple Fund Recommender Engine CLI
+├── requirements.txt                   # Production Python Dependencies
+├── README.md                          # Comprehensive Technical Documentation
 │
-├── notebooks/
-├── sql/
-├── dashboard/
-├── reports/
+├── src/                               # Core Modular Source Code
+│   ├── etl/                           # Extract, Transform, Load Pipelines
+│   │   ├── ingestion.py               # Raw dataset ingestion & validation
+│   │   ├── live_nav.py                # mfapi.in REST API live NAV fetcher
+│   │   ├── cleaning.py                # Type-casting, deduplication, null-handling
+│   │   └── database.py                # SQLite star schema warehouse loader
+│   ├── analytics/                     # Quantitative & Risk Analytics Engines
+│   │   ├── eda.py                     # 12 core exploratory visualizations
+│   │   ├── performance.py             # CAGR, Sharpe, Sortino, Alpha, Beta, Scorecard
+│   │   ├── advanced.py                # VaR (95%), CVaR, Rolling Sharpe, Churn, HHI
+│   │   └── recommender.py             # Rule-based fund recommendation engine
+│   └── reporting/                     # Publication & Presentation Generators
+│       ├── final_report.py            # 18-page comprehensive ReportLab PDF engine
+│       ├── presentation.py            # 12-slide widescreen PowerPoint generator
+│       ├── dashboard_report.py        # 4-page Power BI specification PDF builder
+│       └── day4_report.py             # Day 4 Performance Analytics PDF builder
 │
-├── data_ingestion.py
-├── live_nav_fetch.py
-├── requirements.txt
-└── README.md
+├── db/                                # Analytical Data Warehouse
+│   └── bluestock_mf.db                # SQLite Star Schema Database (10 tables, 7.13 MB)
+│
+├── dashboard/                         # Business Intelligence Deliverables
+│   ├── bluestock_mf_dashboard.pbix    # Microsoft Power BI Interactive Dashboard
+│   └── Dashboard.pdf                  # Complete 4-page Dashboard Specification & Mockups
+│
+├── notebooks/                         # Sequenced Jupyter Research Notebooks
+│   ├── 01_data_ingestion.ipynb        # Day 1: Ingestion & Live API Testing
+│   ├── 02_data_cleaning.ipynb         # Day 2: Data Cleaning & Preprocessing
+│   ├── 03_eda_analysis.ipynb          # Day 3: Exploratory Visualizations
+│   ├── 04_performance_analytics.ipynb # Day 4: Risk-Adjusted Metrics & Scorecard
+│   └── 05_advanced_analytics.ipynb    # Day 6: VaR/CVaR, Rolling Sharpe, HHI & Churn
+│
+├── data/                              # Data Repository
+│   ├── raw/                           # 10 original raw CSV datasets (87K+ rows)
+│   └── processed/                     # 10 cleaned & validated CSV datasets
+│
+├── reports/                           # Output Reports & Quantitative Artifacts
+│   ├── Final_Report.pdf               # 18-Page Comprehensive Technical & Executive Report
+│   ├── Bluestock_MF_Presentation.pptx # 12-Slide 16:9 Widescreen Executive Presentation
+│   ├── Dashboard.pdf                  # 4-Page Power BI Visual Specification
+│   ├── Day4_Performance_Analytics_Report.pdf # Performance Scorecard Document
+│   ├── fund_scorecard.csv             # 40-fund composite rating scorecard
+│   ├── var_cvar_report.csv            # 40-fund tail-risk VaR/CVaR analysis
+│   ├── cohort_analysis.csv            # Investor cohort purchasing behavior
+│   ├── sip_continuity.csv             # SIP cadence & churn risk dataset
+│   ├── sector_hhi.csv                 # 34 equity funds Herfindahl-Hirschman index
+│   ├── alpha_beta.csv                 # OLS regression metrics vs Nifty 100 TRI
+│   ├── tracking_errors.csv            # Annualized tracking errors vs benchmarks
+│   └── charts/                        # 18 publication-quality high-res PNG visuals
+│
+└── sql/                               # Relational Schema & Analytical Queries
+    ├── schema.sql                     # DDL for star schema tables & compound indexes
+    └── queries.sql                    # Production analytical SQL queries
+```
 
 ---
 
@@ -1128,15 +1173,15 @@ python recommender.py --risk High
 
 | # | Deliverable / Rubric Requirement | Weight | Status | Verification & Artifact Location |
 | :-: | :--- | :-: | :-: | :--- |
-| **D1** | **ETL Pipeline Script** | 15% | **Complete** | Automated ingestion, validation, and cleaning in `data_cleaning.py` & `run_pipeline.py` |
-| **D2** | **SQLite Database** | 10% | **Complete** | Relational Star Schema warehouse in `bluestock_mf.db` with primary/foreign keys |
-| **D3** | **EDA Notebook & Charts** | 15% | **Complete** | 12 publication charts in `reports/charts/` & `notebooks/EDA_Analysis.ipynb` |
-| **D4** | **Performance Metrics** | 15% | **Complete** | `run_performance_analytics.py`, `fund_scorecard.csv`, `alpha_beta.csv`, `tracking_errors.csv` |
-| **D5** | **Interactive Dashboard** | 20% | **Complete** | 4-page Power BI specification in `Dashboard.pdf` + high-res mockups (`page1.png` to `page4.png`) |
-| **D6** | **Advanced Analytics** | 10% | **Complete** | `Advanced_Analytics.ipynb`, `var_cvar_report.csv`, `rolling_sharpe_chart.png`, `recommender.py` |
-| **D7** | **Final Report + Slides** | 15% | **Complete** | `Final_Report.pdf` (18 pages) & `Bluestock_MF_Presentation.pptx` (12 slides) |
-| **B1** | **Live NAV API Integration** | Bonus | **Complete** | Real-time AMFI data fetcher in `live_nav_fetch.py` querying mfapi.in |
-| **B2** | **Master Runner Automation** | Bonus | **Complete** | Single-command automated orchestrator in `run_pipeline.py` |
+| **D1** | **ETL Pipeline Script** | 15% | **Complete** | Automated ingestion, validation, and cleaning in `src/etl/` & master `run_pipeline.py` |
+| **D2** | **SQLite Database** | 10% | **Complete** | Relational Star Schema warehouse in `db/bluestock_mf.db` with primary/foreign keys |
+| **D3** | **EDA Notebook & Charts** | 15% | **Complete** | 12 publication charts in `reports/charts/` & `notebooks/03_eda_analysis.ipynb` |
+| **D4** | **Performance Metrics** | 15% | **Complete** | `src/analytics/performance.py`, `fund_scorecard.csv`, `alpha_beta.csv`, `tracking_errors.csv` |
+| **D5** | **Interactive Dashboard** | 20% | **Complete** | 4-page Power BI specification in `dashboard/Dashboard.pdf` + `.pbix` model |
+| **D6** | **Advanced Analytics** | 10% | **Complete** | `notebooks/05_advanced_analytics.ipynb`, `var_cvar_report.csv`, `recommender.py` |
+| **D7** | **Final Report + Slides** | 15% | **Complete** | `reports/Final_Report.pdf` (18 pages) & `reports/Bluestock_MF_Presentation.pptx` (12 slides) |
+| **B1** | **Live NAV API Integration** | Bonus | **Complete** | Real-time AMFI data fetcher in `src/etl/live_nav.py` querying mfapi.in |
+| **B2** | **Master Runner Automation** | Bonus | **Complete** | Single-command automated orchestrator in `run_pipeline.py` (all 8 stages) |
 
 ---
 
